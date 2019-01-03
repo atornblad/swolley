@@ -23,9 +23,9 @@ public abstract class JSONValue {
 			case '\'':
 				return JSONString.readString(reader);
 			default:
-				/*if (input >= '0' && input <= '9' || input == '.' || input == '-') {
+				if (JSONNumber.isNumberStart(c)) {
 					return JSONNumber.readNumber(reader);
-				}*/
+				}
 				if (Character.isLetter(c) || c == '@' || c == '_') {
 					return JSONValue.readIdentifier(reader);
 				}
@@ -57,6 +57,9 @@ public abstract class JSONValue {
 		}
 		else if ("null".equals(value)) {
 			return new JSONNull();
+		}
+		else if ("NaN".equals(value)) {
+			return new JSONNumber(Double.NaN);
 		}
 		else {
 			throw new InvalidJSONException("Unknown identifier " + value);
