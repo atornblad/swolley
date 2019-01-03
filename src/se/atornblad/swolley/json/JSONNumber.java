@@ -13,6 +13,10 @@ public class JSONNumber extends JSONValue {
 	public JSONNumber(double value) {
 		this.value = value;
 	}
+	
+	public double getValue() {
+		return value;
+	}
 
 	@Override
 	public String toJSON(int indentation) {
@@ -23,15 +27,17 @@ public class JSONNumber extends JSONValue {
 		return (c >= '0' && c <= '9') || c == '-' || c == '+' || c == '.';
 	}
 
-	public static JSONNumber readNumber(PeekableReader reader) throws IOException {
+	public static JSONNumber readNumber(PeekableReader reader) throws IOException, InvalidJSONException {
 		boolean negative = false;
 		BigDecimal value = BigDecimal.ZERO;
 		BigDecimal mult = BigDecimal.ONE;
-		boolean exponentMode = false;
 		boolean negativeExponent = false;
 		int exponent = 0;
 		
 		Character c = reader.peek();
+		if (c == null) {
+			throw new InvalidJSONException("Unexpected end of stream - expected start of number");
+		}
 		if (c == '-') {
 			negative = true;
 			reader.readChar();
