@@ -62,7 +62,7 @@ class JSONObjectTests {
 		assertEquals("{\n  \"foo\" : \"bar\",\n  \"sub\" : {\n    \"one\" : true,\n    \"two\" : null,\n    \"three\" : 1.0\n  }\n}", json);
 	}
 
-	@Tests
+	@Test
 	void testReadObject() throws IOException, InvalidJSONException {
 		JSONObject obj = read("{\"foo\":\"bar\"}");
 		assertEquals(1, obj.getPropertyNames().size(), "Should have only one key");
