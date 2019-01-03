@@ -8,10 +8,10 @@ import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 
+import se.atornblad.swolley.io.PeekableReader;
 import se.atornblad.swolley.json.InvalidJSONException;
 import se.atornblad.swolley.json.JSONObject;
 import se.atornblad.swolley.json.JSONValue;
-import sw.atornblad.swolley.io.PeekableReader;
 
 public class Swolley {
 	public static void main(String[] args) throws IOException, InvalidJSONException {
@@ -25,7 +25,7 @@ public class Swolley {
 			}
 		}*/
 		
-/*		StringReader reader = new StringReader("{\"key\":{\"foo\":\"bar\",\"hey\":\"ho\"},\"nyckel\":\"värde\"}");
+/*		StringReader reader = new StringReader("{\"key\":{\"foo\":\"bar\",\"hey\":\"ho\"},\"nyckel\":\"vï¿½rde\"}");
 		JSONValue value = JSONValue.read(new PeekableReader(reader));
 		System.out.println(value.toJSON());*/
 		

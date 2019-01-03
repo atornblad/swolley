@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
-import sw.atornblad.swolley.io.PeekableReader;
+import se.atornblad.swolley.io.PeekableReader;
 
 public class JSONArray extends JSONValue {
 	private ArrayList<JSONValue> items;

@@ -2,7 +2,7 @@ package se.atornblad.swolley.json;
 
 import java.io.IOException;
 
-import sw.atornblad.swolley.io.PeekableReader;
+import se.atornblad.swolley.io.PeekableReader;
 
 public class JSONString extends JSONValue {
 	private String value;

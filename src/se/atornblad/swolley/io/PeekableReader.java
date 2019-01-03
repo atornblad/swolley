@@ -1,4 +1,4 @@
-package sw.atornblad.swolley.io;
+package se.atornblad.swolley.io;
 
 import java.io.IOException;
 import java.io.Reader;

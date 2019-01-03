@@ -3,8 +3,8 @@ package se.atornblad.swolley.json;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+import se.atornblad.swolley.io.PeekableReader;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import sw.atornblad.swolley.io.PeekableReader;
 
 public class JSONNumber extends JSONValue {
 	

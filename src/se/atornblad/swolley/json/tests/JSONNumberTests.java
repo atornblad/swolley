@@ -11,9 +11,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.Arguments;
 
+import se.atornblad.swolley.io.PeekableReader;
 import se.atornblad.swolley.json.InvalidJSONException;
 import se.atornblad.swolley.json.JSONNumber;
-import sw.atornblad.swolley.io.PeekableReader;
 
 public class JSONNumberTests {
 	

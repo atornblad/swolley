@@ -3,7 +3,7 @@ package se.atornblad.swolley.json;
 import java.io.IOException;
 import java.io.Reader;
 
-import sw.atornblad.swolley.io.PeekableReader;
+import se.atornblad.swolley.io.PeekableReader;
 
 public abstract class JSONValue {
 	

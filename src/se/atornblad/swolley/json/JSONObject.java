@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-import sw.atornblad.swolley.io.PeekableReader;
+import se.atornblad.swolley.io.PeekableReader;
 
 public class JSONObject extends JSONValue {
 	private HashMap<String, JSONValue> properties;
