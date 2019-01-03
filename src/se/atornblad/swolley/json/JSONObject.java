@@ -1,20 +1,27 @@
 package se.atornblad.swolley.json;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import se.atornblad.swolley.io.PeekableReader;
 
 public class JSONObject extends JSONValue {
 	private HashMap<String, JSONValue> properties;
+	private List<String> orderedPropertyNames;
 	
 	public JSONObject() {
 		properties = new HashMap<>();
+		orderedPropertyNames = new ArrayList<>();
 	}
 	
 	public void set(String key, JSONValue value) {
+		if (!properties.containsKey(key)) {
+			orderedPropertyNames.add(key);
+		}
 		properties.put(key, value);
 	}
 	
@@ -77,10 +84,11 @@ public class JSONObject extends JSONValue {
 
 	@Override
 	public String toJSON(int indentation) {
+		if (properties.size() == 0) return "{}";
 		StringBuilder builder = new StringBuilder();
 		builder.append("{\n");
 		indentation++;
-		Iterator<String> keyIter = properties.keySet().iterator();
+		Iterator<String> keyIter = orderedPropertyNames.iterator();
 		while (keyIter.hasNext()) {
 			String key = keyIter.next();
 			builder.append(String.format("%" + (indentation * 2) + "s", ""));
