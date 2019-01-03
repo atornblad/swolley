@@ -1,7 +1,17 @@
 package se.atornblad.swolley.json;
 
 import java.io.IOException;
+import java.io.InvalidClassException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -123,5 +133,89 @@ public class JSONObject extends JSONValue {
 			}
 		}
 		return remainingKeys.isEmpty();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T create(Class<T> theClass) throws InvalidClassException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
+		T obj = theClass.newInstance();
+		
+		Method[] methods = Arrays.stream(theClass.getMethods())
+				                 .filter(m -> m.getName().startsWith("set"))
+				                 .filter(m -> m.getName().length() >= 4)
+				                 .filter(m -> Character.isUpperCase(m.getName().charAt(3)) || m.getName().charAt(3) == '$')
+				                 .filter(m -> m.getReturnType().equals(Void.TYPE))
+				                 .filter(m -> m.getParameterCount() == 1)
+				                 .toArray(Method[]::new);
+		
+		for (Method m : methods) {
+			String name = m.getName().substring(3);
+			name = name.substring(0, 1).toLowerCase() + name.substring(1);
+			if (containsKey(name)) {
+				Parameter param = m.getParameters()[0];
+				m.invoke(obj, createParameter(get(name), param.getParameterizedType(), name));
+			}
+		}
+		
+		return obj;
+	}
+
+	private Object createParameter(JSONValue jsonValue, Type type, String parameterName) throws InvalidClassException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
+		if (jsonValue == null || jsonValue instanceof JSONNull) {
+			return null;
+		}
+		
+		if (type instanceof ParameterizedType) {
+			ParameterizedType ptype = (ParameterizedType)type;
+			
+			Type rawType = ptype.getRawType();
+			if (rawType.getTypeName().equals("java.util.Map") && jsonValue instanceof JSONObject) {
+				JSONObject obj = (JSONObject)jsonValue;
+				Type keyType = ptype.getActualTypeArguments()[0];
+				Type valueType = ptype.getActualTypeArguments()[1];
+				
+				if (keyType.equals(String.class)) {
+					HashMap<String, Object> map = new HashMap<>();
+					for (String key : obj.getPropertyNames()) {
+						map.put(key, createParameter(obj.get(key), valueType, parameterName + "[\"" + key + "\"]"));
+					}
+					return map;
+				}
+			}
+		}
+		
+		if (type instanceof Class<?>) {
+			Class<?> cls = (Class<?>)type;
+			
+			if (cls.isAssignableFrom(String.class)) {
+				if (jsonValue instanceof JSONString) {
+					return ((JSONString)jsonValue).getValue();
+				}
+			}
+			
+			if (jsonValue instanceof JSONObject) {
+				JSONObject obj = (JSONObject)jsonValue;
+				return obj.create(cls);
+			}
+			
+			if (jsonValue instanceof JSONBoolean && (cls.equals(Boolean.class) || cls.isPrimitive())) {
+				JSONBoolean bool = (JSONBoolean)jsonValue;
+				return bool.getValue();
+			}
+			
+			if (cls.isArray() && jsonValue instanceof JSONArray) {
+				JSONArray arr = (JSONArray)jsonValue;
+				
+				Object typedArray = Array.newInstance(cls.getComponentType(), arr.size());
+				for (int i = 0; i < arr.size(); ++i) {
+					Array.set(typedArray, i, createParameter(arr.get(i), cls.getComponentType(), parameterName + "[" + i + "]"));
+				}
+				
+				return typedArray;
+			}
+			
+			throw new InvalidClassException("Parameter " + parameterName + " requires a " + cls.getSimpleName() + " value");
+		}
+		
+		throw new InvalidClassException("Parameter " + parameterName + " requires a " + type.getTypeName() + " value");
 	}
 }

@@ -7,6 +7,10 @@ public class JSONBoolean extends JSONValue {
 	public JSONBoolean(boolean b) {
 		value = b;
 	}
+	
+	public boolean getValue() {
+		return value;
+	}
 
 	@Override
 	public String toJSON(int indentation) {
