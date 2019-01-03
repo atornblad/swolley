@@ -25,7 +25,7 @@ public class Swolley {
 			}
 		}*/
 		
-/*		StringReader reader = new StringReader("{\"key\":{\"foo\":\"bar\",\"hey\":\"ho\"},\"nyckel\":\"vï¿½rde\"}");
+/*		StringReader reader = new StringReader("{\"key\":{\"foo\":\"bar\",\"hey\":\"ho\"},\"nyckel\":\"värde\"}");
 		JSONValue value = JSONValue.read(new PeekableReader(reader));
 		System.out.println(value.toJSON());*/
 		

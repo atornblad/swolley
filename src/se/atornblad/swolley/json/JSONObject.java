@@ -106,4 +106,22 @@ public class JSONObject extends JSONValue {
 		
 		return builder.toString();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (!(obj instanceof JSONObject)) return false;
+		JSONObject o = (JSONObject)obj;
+		Set<String> remainingKeys = o.getPropertyNames();
+		for (String key : properties.keySet()) {
+			if (remainingKeys.contains(key)) {
+				remainingKeys.remove(key);
+				if (!get(key).equals(o.get(key))) return false;
+			}
+			else {
+				return false;
+			}
+		}
+		return remainingKeys.isEmpty();
+	}
 }

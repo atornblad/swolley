@@ -14,4 +14,11 @@ public class JSONBoolean extends JSONValue {
 		return value ? "true" : "false";
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (!(obj instanceof JSONBoolean)) return false;
+		JSONBoolean bool = (JSONBoolean)obj;
+		return bool.value == value;
+	}
 }

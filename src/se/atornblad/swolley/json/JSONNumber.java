@@ -115,4 +115,12 @@ public class JSONNumber extends JSONValue {
 			return value.doubleValue();
 		}
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (!(obj instanceof JSONNumber)) return false;
+		JSONNumber num = (JSONNumber)obj;
+		return num.value == value;
+	}
 }

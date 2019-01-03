@@ -80,4 +80,16 @@ public class JSONArray extends JSONValue {
 		
 		return builder.toString();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (!(obj instanceof JSONArray)) return false;
+		JSONArray arr = (JSONArray)obj;
+		if (arr.size() != size()) return false;
+		for (int i = 0; i < size(); ++i) {
+			if (!get(i).equals(arr.get(i))) return false;
+		}
+		return true;
+	}
 }

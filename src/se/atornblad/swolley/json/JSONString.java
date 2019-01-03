@@ -86,4 +86,12 @@ public class JSONString extends JSONValue {
 		builder.append("\"");
 		return builder.toString();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (!(obj instanceof JSONString)) return false;
+		JSONString str = (JSONString)obj;
+		return str.value.equals(value);
+	}
 }
