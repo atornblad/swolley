@@ -5,6 +5,7 @@ public class Schema {
 	private String format; // ENUM
 	private String $ref;
 	private Schema items;
+	private String[] enumValues;
 	
 	public String getType() {
 		return type;
@@ -12,6 +13,14 @@ public class Schema {
 	
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	public String[] getEnum() {
+		return enumValues;
+	}
+	
+	public void setEnum(String[] enumValues) {
+		this.enumValues = enumValues;
 	}
 	
 	public String getFormat() {
