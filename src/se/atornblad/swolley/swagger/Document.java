@@ -10,6 +10,7 @@ public class Document {
 	private DocumentInformation info;
 	private Tag[] tags;
 	private Map<String, Path> paths;
+	private Map<String, Definition> definitions;
 	
 	public Document() {
 		
@@ -63,6 +64,14 @@ public class Document {
 		return basePath;
 	}
 	
+	public Map<String, Definition> getDefinitions() {
+		return definitions;
+	}
+
+	public void setDefinitions(Map<String, Definition> definitions) {
+		this.definitions = definitions;
+	}
+
 	@Override
 	public String toString() {
 		return info.getDescription() + " v" + info.getVersion() + " (Swagger version: " + swagger + ")\n" +

@@ -13,17 +13,23 @@ import se.atornblad.swolley.json.InvalidJSONException;
 import se.atornblad.swolley.json.JSONObject;
 import se.atornblad.swolley.json.JSONValue;
 import se.atornblad.swolley.swagger.Document;
+import se.atornblad.swolley.volley.CodeGenerator;
 
 public class Swolley {
 	public static void main(String[] args) throws IOException, InvalidJSONException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
 		URL url = new URL(args[0]);
+		String srcPath = args[1];
+		
 		try (InputStream input = url.openStream()) {
 			try (InputStreamReader rawReader = new InputStreamReader(input, Charset.forName("UTF-8"))) {
 				try (BufferedReader reader = new BufferedReader(rawReader)) {
 					JSONObject obj = (JSONObject)JSONValue.read(new PeekableReader(reader));
 					Document doc = obj.create(Document.class);
-					System.out.println(doc.toString());
-					System.out.println(obj.toJSON());
+					
+					CodeGenerator.generate(doc, srcPath);
+					
+					//System.out.println(doc.toString());
+					//System.out.println(obj.toJSON());
 				}
 			}
 		}
