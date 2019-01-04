@@ -16,7 +16,7 @@ import se.atornblad.swolley.swagger.Document;
 
 public class Swolley {
 	public static void main(String[] args) throws IOException, InvalidJSONException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
-		URL url = new URL("MY_TEST_URL");
+		URL url = new URL(args[0]);
 		try (InputStream input = url.openStream()) {
 			try (InputStreamReader rawReader = new InputStreamReader(input, Charset.forName("UTF-8"))) {
 				try (BufferedReader reader = new BufferedReader(rawReader)) {
