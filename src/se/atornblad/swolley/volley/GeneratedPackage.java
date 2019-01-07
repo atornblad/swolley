@@ -77,6 +77,17 @@ public class GeneratedPackage {
 		
 		return result;
 	}
+	
+	public static GeneratedPackage fromPackageName(String packageName) {
+		GeneratedPackage result = null;
+		
+		String[] hostParts = Arrays.stream(packageName.split("\\.")).toArray(String[]::new);
+		for (int i = hostParts.length - 1; i >= 0; --i) {
+			result = new GeneratedPackage(hostParts[i], result);
+		}
+		
+		return result;
+	}
 
 	public boolean hasClass(String clientClassName) {
 		return classes.containsKey(clientClassName);

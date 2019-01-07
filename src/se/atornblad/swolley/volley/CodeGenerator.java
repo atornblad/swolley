@@ -69,6 +69,12 @@ public class CodeGenerator {
 		}
 		
 		GeneratedClass genClass = clientsPackage.createOrGetClass(clientClassName);
+		genClass.addImport(GeneratedClass.createFromFullName("java.util.function.Consumer"));
+		genClass.addImport(GeneratedClass.createFromFullName("com.android.volley.RequestQueue"));	
+		genClass.addImport(GeneratedClass.volleyRequest);
+		genClass.addImport(GeneratedClass.volleyResponse);
+		genClass.addImport(GeneratedClass.createFromFullName("com.android.volley.VolleyError"));
+		genClass.addImport(GeneratedClass.createFromFullName("com.android.volley.toolbox.Volley"));
 		
 		String methodName = action.getSummary(); // .getOperationId();
 	}
