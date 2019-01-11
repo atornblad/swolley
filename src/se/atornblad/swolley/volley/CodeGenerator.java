@@ -8,47 +8,59 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import se.atornblad.swolley.strings.StringReplacer;
-import se.atornblad.swolley.swagger.Action;
-import se.atornblad.swolley.swagger.Document;
-import se.atornblad.swolley.swagger.Path;
-import sun.misc.Regexp;
+import se.atornblad.swolley.swagger.*;
 
-public class CodeGenerator {
+public final class CodeGenerator {
 
 	public static void generate(Document doc, String srcPath) throws MalformedURLException {
 		GeneratedPackage rootPackage = GeneratedPackage.fromBaseUrl(new URL("http://" + doc.getHost() + doc.getBasePath()));
 		for (Entry<String, Path> entry : doc.getPaths().entrySet()) {
 			String pathKey = entry.getKey();
 			Path path = entry.getValue();
-			generate(doc, rootPackage, path, path.getGet(), "GET", pathKey);
-			generate(doc, rootPackage, path, path.getPost(), "POST", pathKey);
-			generate(doc, rootPackage, path, path.getPut(), "PUT", pathKey);
-			generate(doc, rootPackage, path, path.getDelete(), "DELETE", pathKey);
-			generate(doc, rootPackage, path, path.getHead(), "HEAD", pathKey);
-			generate(doc, rootPackage, path, path.getOptions(), "OPTIONS", pathKey);
-			generate(doc, rootPackage, path, path.getPatch(), "PATCH", pathKey);
+			createActionMethod(doc, rootPackage, path, path.getGet(), "GET", pathKey);
+			createActionMethod(doc, rootPackage, path, path.getPost(), "POST", pathKey);
+			createActionMethod(doc, rootPackage, path, path.getPut(), "PUT", pathKey);
+			createActionMethod(doc, rootPackage, path, path.getDelete(), "DELETE", pathKey);
+			createActionMethod(doc, rootPackage, path, path.getHead(), "HEAD", pathKey);
+			createActionMethod(doc, rootPackage, path, path.getOptions(), "OPTIONS", pathKey);
+			createActionMethod(doc, rootPackage, path, path.getPatch(), "PATCH", pathKey);
 		}
 		
-		generate(rootPackage, srcPath + "/" + rootPackage.getLocalDir());
+		for (Entry<String, Definition> entry : doc.getDefinitions().entrySet()) {
+			String className = entry.getKey();
+			Definition definition = entry.getValue();
+			createDefinitionClass(doc, rootPackage, className, definition);
+		}
+		
+		generateJavaFiles(rootPackage, srcPath + "/" + rootPackage.getLocalDir());
 	}
 
-	private static void generate(GeneratedPackage pkg, String srcPath) {
+	private static void generateJavaFiles(GeneratedPackage pkg, String srcPath) {
 		for (GeneratedClass cls : pkg.getClasses()) {
-			generate(cls, srcPath);
+			generateJavaFile(cls, srcPath);
 		}
 		
 		for (GeneratedPackage subPkg : pkg.getSubPackages().values()) {
-			generate(subPkg, srcPath + "/" + subPkg.getName());
+			generateJavaFiles(subPkg, srcPath + "/" + subPkg.getName());
 		}
 	}
 
-	private static void generate(GeneratedClass cls, String srcPath) {
+	private static void generateJavaFile(GeneratedClass cls, String srcPath) {
 		System.out.println(srcPath + "/" + cls.getName() + ".java :\n");
 		System.out.println(cls.renderJava());
 		System.out.println("\n\n");
 	}
 
-	private static void generate(Document doc, GeneratedPackage rootPackage, Path path, Action action, String httpMethod, String pathKey) {
+	private static void createDefinitionClass(Document doc, GeneratedPackage rootPackage, String className, Definition definition) {
+		GeneratedPackage modelsPackage = rootPackage.createOrGetSubPackage("models");
+		
+		GeneratedClass defClass = modelsPackage.createOrGetClass(className);
+		for (Entry<String, Schema> field : definition.getProperties().entrySet()) {
+			defClass.addField(field.getKey(), GeneratedClass.fromSchema(field.getValue(), rootPackage));
+		}
+	}
+
+	private static void createActionMethod(Document doc, GeneratedPackage rootPackage, Path path, Action action, String httpMethod, String pathKey) {
 		if (action == null) return;
 		
 		GeneratedPackage clientsPackage = rootPackage.createOrGetSubPackage("clients");
@@ -77,5 +89,14 @@ public class CodeGenerator {
 		genClass.addImport(GeneratedClass.createFromFullName("com.android.volley.toolbox.Volley"));
 		
 		String methodName = action.getSummary(); // .getOperationId();
+		if (genClass.hasMethod(methodName)) {
+			methodName = action.getOperationId();
+		}
+		
+		genClass.addMethod(GeneratedMethod.createAccessMethod(methodName, doc, rootPackage, path, action, httpMethod, pathKey));
+	}
+	
+	public static String capitalizeFirst(String word) {
+		return word.substring(0,  1).toUpperCase() + word.substring(1);
 	}
 }
