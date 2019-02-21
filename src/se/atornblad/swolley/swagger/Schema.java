@@ -6,6 +6,7 @@ public class Schema {
 	private String $ref;
 	private Schema items;
 	private String[] enumValues;
+	private boolean required;
 	
 	public String getType() {
 		return type;
@@ -45,5 +46,13 @@ public class Schema {
 	
 	public void setItems(Schema items) {
 		this.items = items;
+	}
+
+	public boolean isRequired() {
+		return required;
+	}
+
+	public void setRequired(boolean required) {
+		this.required = required;
 	}
 }

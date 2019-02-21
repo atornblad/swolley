@@ -16,6 +16,8 @@ import se.atornblad.swolley.swagger.Document;
 import se.atornblad.swolley.volley.CodeGenerator;
 
 public class Swolley {
+	public static final String SWOLLEY_VERSION = "0.1.52";
+	
 	public static void main(String[] args) throws IOException, InvalidJSONException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
 		URL url = new URL(args[0]);
 		String srcPath = args[1];

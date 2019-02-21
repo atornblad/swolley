@@ -1,5 +1,9 @@
 package se.atornblad.swolley.swagger;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class Path {
 	private Action get;
 	private Action head;
@@ -63,6 +67,15 @@ public class Path {
 	
 	public void setPatch(Action patch) {
 		this.patch = patch;
+	}
+
+	public boolean hasOnlyOneMethod() {
+		List<Action> actions = Arrays.asList(get, head, post, put, delete, options, patch);
+		Stream<Action> stream = actions.stream();
+		Stream<Action> filtered = stream.filter(a -> a != null);
+		long count = filtered.count();
+		return count == 1;
+//		return Arrays.asList(get, head, post, put, delete, options, patch).stream().filter(a -> a != null).count() == 1;
 	}
 	
 	

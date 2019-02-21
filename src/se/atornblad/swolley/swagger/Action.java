@@ -5,10 +5,11 @@ import java.util.Map;
 public class Action {
 	private String[] tags;
 	private String summary;
+	private String description;
 	private String operationId;
 	private String[] consumes;
 	private String[] produces;
-	private Parameter[] parameters;
+	private Parameter[] parameters = new Parameter[0];
 	private Map<String, Response> responses;
 	private boolean deprecated;
 	
@@ -20,12 +21,28 @@ public class Action {
 		this.tags = tags;
 	}
 	
+	public boolean hasSummary() {
+		return summary != null && !summary.equals("");
+	}
+	
 	public String getSummary() {
 		return summary;
 	}
 	
 	public void setSummary(String summary) {
 		this.summary = summary;
+	}
+	
+	public boolean hasDescription() {
+		return description != null && !description.equals("");
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 	public String getOperationId() {
