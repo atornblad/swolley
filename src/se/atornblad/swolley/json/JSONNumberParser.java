@@ -51,62 +51,65 @@ public class JSONNumberParser {
 
 	private void parseExponentPart(Character c) throws IOException {
 		if (c == 'e' || c == 'E') {
-			c = reader.readChar();
-			c = reader.peek();
-			if (c == '-') {
-				c = reader.readChar();
+			Character nextC = reader.readChar();
+			nextC = reader.peek();
+			if (nextC == '-') {
+				nextC = reader.readChar();
 				negativeExponent = true;
-				c = reader.peek();
+				nextC = reader.peek();
 			}
-			else if (c == '+') {
-				c = reader.readChar();
-				c = reader.peek();
+			else if (nextC == '+') {
+				nextC = reader.readChar();
+				nextC = reader.peek();
 			}
-			while (c != null && c >= '0' && c <= '9') {
-				c = reader.readChar();
-				exponent = exponent * 10 + (c - '0');
-				c = reader.peek();
+			while (nextC != null && nextC >= '0' && c <= '9') {
+				nextC = reader.readChar();
+				exponent = exponent * 10 + (nextC - '0');
+				nextC = reader.peek();
 			}
 		}
 	}
 
 	private Character parseFractionPart(Character c) throws IOException {
 		// read decimal part of value
-		if (c == '.') {
+		Character nextC = c;
+		if (nextC == '.') {
 			reader.readChar();
 			mult = mult.divide(BigDecimal.TEN);
-			c = reader.peek();
-			while (c != null && c >= '0' && c <= '9') {
-				c = reader.readChar();
-				value = value.add(mult.multiply(new BigDecimal(c - '0')));
+			nextC = reader.peek();
+			while (nextC != null && nextC >= '0' && nextC <= '9') {
+				nextC = reader.readChar();
+				value = value.add(mult.multiply(new BigDecimal(nextC - '0')));
 				mult = mult.divide(BigDecimal.TEN);
-				c = reader.peek();
+				nextC = reader.peek();
 			}
 		}
-		return c;
+		return nextC;
 	}
 
 	private Character parseIntegerPart(Character c) throws IOException {
 		// read integer part of value
-		while (c != null && c >= '0' && c <= '9') {
-			c = reader.readChar();
-			value = value.multiply(BigDecimal.TEN).add(new BigDecimal(c - '0'));
-			c = reader.peek();
+		Character nextC = c;
+		while (nextC != null && nextC >= '0' && nextC <= '9') {
+			nextC = reader.readChar();
+			value = value.multiply(BigDecimal.TEN).add(new BigDecimal(nextC - '0'));
+			nextC = reader.peek();
 		}
-		return c;
+		return nextC;
 	}
 
 	private Character parseOptionalInitialSign(Character c) throws IOException {
-		if (c == '-') {
+		Character nextC = c;
+		if (nextC == '-') {
 			negative = true;
 			reader.readChar();
-			c = reader.peek();
+			nextC = reader.peek();
 		}
-		else if (c == '+') {
+		else if (nextC == '+') {
 			reader.readChar();
-			c = reader.peek();
+			nextC = reader.peek();
 		}
-		return c;
+		return nextC;
 	}
 	
 	private static double optionalNegate(boolean negative, BigDecimal value) {

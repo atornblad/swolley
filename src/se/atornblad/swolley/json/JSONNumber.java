@@ -1,7 +1,6 @@
 package se.atornblad.swolley.json;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 
 import se.atornblad.swolley.io.PeekableReader;
 
