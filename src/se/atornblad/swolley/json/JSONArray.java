@@ -3,7 +3,6 @@ package se.atornblad.swolley.json;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Set;
 
 import se.atornblad.swolley.io.PeekableReader;
 
@@ -43,7 +42,7 @@ public class JSONArray extends JSONValue {
 		peeker.skipWhitespace();
 		while (peeker.peek() != ']') {
 			JSONValue value = JSONValue.read(peeker);
-			arr.add(value);;
+			arr.add(value);
 			peeker.skipWhitespace();
 			if (peeker.peek() == ',') {
 				peeker.readChar();

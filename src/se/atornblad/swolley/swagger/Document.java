@@ -1,6 +1,6 @@
 package se.atornblad.swolley.swagger;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Document {
@@ -13,7 +13,8 @@ public class Document {
 	private Map<String, Definition> definitions;
 	
 	public Document() {
-		
+		paths = new HashMap<String, Path>();
+		definitions = new HashMap<String, Definition>();
 	}
 	
 	public Map<String, Path> getPaths() {

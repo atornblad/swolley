@@ -3,10 +3,8 @@ package se.atornblad.swolley.json;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -165,57 +163,73 @@ public class JSONObject extends JSONValue {
 		}
 		
 		if (type instanceof ParameterizedType) {
-			ParameterizedType ptype = (ParameterizedType)type;
-			
-			Type rawType = ptype.getRawType();
-			if (rawType.getTypeName().equals("java.util.Map") && jsonValue instanceof JSONObject) {
-				JSONObject obj = (JSONObject)jsonValue;
-				Type keyType = ptype.getActualTypeArguments()[0];
-				Type valueType = ptype.getActualTypeArguments()[1];
-				
-				if (keyType.equals(String.class)) {
-					HashMap<String, Object> map = new HashMap<>();
-					for (String key : obj.getPropertyNames()) {
-						map.put(key, createParameter(obj.get(key), valueType, parameterName + "[\"" + key + "\"]"));
-					}
-					return map;
-				}
+			return createParameterizedTypeParameter(jsonValue, type, parameterName);
+		}
+		
+		else if (type instanceof Class<?>) {
+			return createSimpleTypeParameter(jsonValue, type, parameterName);
+		}
+		
+		else {
+			throw new InvalidClassException("Parameter " + parameterName + " requires a " + type.getTypeName() + " value");
+		}
+	}
+
+	private Object createSimpleTypeParameter(JSONValue jsonValue, Type type, String parameterName)
+			throws InvalidClassException, InstantiationException, IllegalAccessException, InvocationTargetException,
+			ClassNotFoundException {
+		Class<?> cls = (Class<?>)type;
+		
+		if (cls.isAssignableFrom(String.class)) {
+			if (jsonValue instanceof JSONString) {
+				return ((JSONString)jsonValue).getValue();
 			}
 		}
 		
-		if (type instanceof Class<?>) {
-			Class<?> cls = (Class<?>)type;
-			
-			if (cls.isAssignableFrom(String.class)) {
-				if (jsonValue instanceof JSONString) {
-					return ((JSONString)jsonValue).getValue();
-				}
-			}
-			
-			if (jsonValue instanceof JSONObject) {
-				JSONObject obj = (JSONObject)jsonValue;
-				return obj.create(cls);
-			}
-			
-			if (jsonValue instanceof JSONBoolean && (cls.equals(Boolean.class) || cls.isPrimitive())) {
-				JSONBoolean bool = (JSONBoolean)jsonValue;
-				return bool.getValue();
-			}
-			
-			if (cls.isArray() && jsonValue instanceof JSONArray) {
-				JSONArray arr = (JSONArray)jsonValue;
-				
-				Object typedArray = Array.newInstance(cls.getComponentType(), arr.size());
-				for (int i = 0; i < arr.size(); ++i) {
-					Array.set(typedArray, i, createParameter(arr.get(i), cls.getComponentType(), parameterName + "[" + i + "]"));
-				}
-				
-				return typedArray;
-			}
-			
-			throw new InvalidClassException("Parameter " + parameterName + " requires a " + cls.getSimpleName() + " value");
+		if (jsonValue instanceof JSONObject) {
+			JSONObject obj = (JSONObject)jsonValue;
+			return obj.create(cls);
 		}
 		
-		throw new InvalidClassException("Parameter " + parameterName + " requires a " + type.getTypeName() + " value");
+		if (jsonValue instanceof JSONBoolean && (cls.equals(Boolean.class) || cls.isPrimitive())) {
+			JSONBoolean bool = (JSONBoolean)jsonValue;
+			return bool.getValue();
+		}
+		
+		if (cls.isArray() && jsonValue instanceof JSONArray) {
+			JSONArray arr = (JSONArray)jsonValue;
+			
+			Object typedArray = Array.newInstance(cls.getComponentType(), arr.size());
+			for (int i = 0; i < arr.size(); ++i) {
+				Array.set(typedArray, i, createParameter(arr.get(i), cls.getComponentType(), parameterName + "[" + i + "]"));
+			}
+			
+			return typedArray;
+		}
+		
+		throw new InvalidClassException("Parameter " + parameterName + " requires a " + cls.getSimpleName() + " value");
+	}
+
+	private Object createParameterizedTypeParameter(JSONValue jsonValue, Type type, String parameterName)
+			throws InvalidClassException, InstantiationException, IllegalAccessException, InvocationTargetException,
+			ClassNotFoundException {
+		ParameterizedType ptype = (ParameterizedType)type;
+		
+		Type rawType = ptype.getRawType();
+		if (rawType.getTypeName().equals("java.util.Map") && jsonValue instanceof JSONObject) {
+			JSONObject obj = (JSONObject)jsonValue;
+			Type keyType = ptype.getActualTypeArguments()[0];
+			Type valueType = ptype.getActualTypeArguments()[1];
+			
+			if (keyType.equals(String.class)) {
+				HashMap<String, Object> map = new HashMap<>();
+				for (String key : obj.getPropertyNames()) {
+					map.put(key, createParameter(obj.get(key), valueType, parameterName + "[\"" + key + "\"]"));
+				}
+				return map;
+			}
+		}
+		
+		throw new InvalidClassException("Parameter " + parameterName + " requires a " + ptype.getTypeName() + " value (ParameterizedType)");
 	}
 }

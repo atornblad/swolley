@@ -218,62 +218,91 @@ public class GeneratedClass implements Comparable<GeneratedClass> {
 		builder.append("\n");
 		
 		if (containingPackage != null) {
-			builder.append("package ");
-			builder.append(containingPackage.getFullName());
-			builder.append(";\n\n");
-			if (imports.size() > 0) {
-				for (GeneratedClass clazz : imports) {
-					builder.append("import ");
-					builder.append(clazz.getFullName());
-					builder.append(";\n");
-				}
-				builder.append("\n");
-			}
-			
-			builder.append("/**\n");
-			if (jsdoc != null && !jsdoc.equals("")) {
-				String[] lines = jsdoc.split("\n");
-				for (String line : lines) {
-					builder.append(" * ");
-					builder.append(line);
-					builder.append("\n");
-				}
-			}
-			builder.append(" * @author swolley-v");
-			builder.append(Swolley.SWOLLEY_VERSION);
-			builder.append("\n");
-			builder.append(" * @version " + (new SimpleDateFormat("yyyyMMdd-HHmmss").format(Calendar.getInstance().getTime())) + "\n");
-			builder.append(" */\n");
-			builder.append("public class ");
-			builder.append(name);
-			builder.append(" {\n");
-			builder.append("  \n");
-			
-			if (fields.size() > 0) {
-				for (GeneratedField field : fields) {
-					field.generateJava(builder, "  ", imports);
-				}
-				builder.append("\n");
-			}
-			
-			if (methods.size() > 0) {
-				for (Entry<String, GeneratedMethod> entry : methods.entrySet()) {
-					entry.getValue().generateJava(builder, "  ", imports);
-					builder.append("\n");
-				}
-			}
-			
-			if (fields.size() > 0) {
-				for (GeneratedField field : fields) {
-					field.generateGetterJava(builder, "  ", imports);
-					field.generateSetterJava(builder, "  ", imports);
-					builder.append("\n");
-				}
-			}
-			
-			builder.append("}\n");
+			renderPackageDeclaration(builder);
 		}
+		
+		renderImports(imports, builder);
+		renderClassJsdoc(builder);
+		renderClassDeclaration(imports, builder);
+		
 		return builder.toString();
+	}
+
+	private void renderClassDeclaration(Set<GeneratedClass> imports, StringBuilder builder) {
+		builder.append("public class ");
+		builder.append(name);
+		builder.append(" {\n");
+		builder.append("  \n");
+		
+		renderClassFields(imports, builder);
+		
+		renderClassMethods(imports, builder);
+		
+		renderGettersAndSetters(imports, builder);
+		
+		builder.append("}\n");
+	}
+
+	private void renderGettersAndSetters(Set<GeneratedClass> imports, StringBuilder builder) {
+		if (fields.size() > 0) {
+			for (GeneratedField field : fields) {
+				field.generateGetterJava(builder, "  ", imports);
+				field.generateSetterJava(builder, "  ", imports);
+				builder.append("\n");
+			}
+		}
+	}
+
+	private void renderClassMethods(Set<GeneratedClass> imports, StringBuilder builder) {
+		if (methods.size() > 0) {
+			for (Entry<String, GeneratedMethod> entry : methods.entrySet()) {
+				entry.getValue().generateJava(builder, "  ", imports);
+				builder.append("\n");
+			}
+		}
+	}
+
+	private void renderClassFields(Set<GeneratedClass> imports, StringBuilder builder) {
+		if (fields.size() > 0) {
+			for (GeneratedField field : fields) {
+				field.generateJava(builder, "  ", imports);
+			}
+			builder.append("\n");
+		}
+	}
+
+	private void renderImports(Set<GeneratedClass> imports, StringBuilder builder) {
+		if (imports.size() > 0) {
+			for (GeneratedClass clazz : imports) {
+				builder.append("import ");
+				builder.append(clazz.getFullName());
+				builder.append(";\n");
+			}
+			builder.append("\n");
+		}
+	}
+
+	private void renderPackageDeclaration(StringBuilder builder) {
+		builder.append("package ");
+		builder.append(containingPackage.getFullName());
+		builder.append(";\n\n");
+	}
+
+	private void renderClassJsdoc(StringBuilder builder) {
+		builder.append("/**\n");
+		if (jsdoc != null && !jsdoc.equals("")) {
+			String[] lines = jsdoc.split("\n");
+			for (String line : lines) {
+				builder.append(" * ");
+				builder.append(line);
+				builder.append("\n");
+			}
+		}
+		builder.append(" * @author swolley-v");
+		builder.append(Swolley.SWOLLEY_VERSION);
+		builder.append("\n");
+		builder.append(" * @version " + (new SimpleDateFormat("yyyyMMdd-HHmmss").format(Calendar.getInstance().getTime())) + "\n");
+		builder.append(" */\n");
 	}
 	
 	public void addImport(GeneratedClass clazz) {
@@ -360,7 +389,7 @@ public class GeneratedClass implements Comparable<GeneratedClass> {
 		if (value == null) {
 			return GeneratedClass.VOID;
 		}
-		if (value.getType() == null) {
+		else if (value.getType() == null) {
 			String ref = value.get$ref();
 			if (ref != null) {
 				if (ref.startsWith("#/definitions/")) {
@@ -369,13 +398,13 @@ public class GeneratedClass implements Comparable<GeneratedClass> {
 				}
 			}
 		}
-		if ("object".equals(value.getType())) {
+		else if ("object".equals(value.getType())) {
 			return GeneratedClass.OBJECT;
 		}
-		if ("string".equals(value.getType())) {
+		else if ("string".equals(value.getType())) {
 			return GeneratedClass.STRING;
 		}
-		if ("boolean".equals(value.getType())) {
+		else if ("boolean".equals(value.getType())) {
 			if (value.isRequired()) {
 				return GeneratedClass.BOOLEAN;
 			}
@@ -383,15 +412,15 @@ public class GeneratedClass implements Comparable<GeneratedClass> {
 				return GeneratedClass.Boolean;
 			}
 		}
-		if ("array".equals(value.getType())) {
+		else if ("array".equals(value.getType())) {
 			return GeneratedClass.createArrayOf(GeneratedClass.fromSchema(value.getItems(), rootPackage));
 		}
-		if ("integer".equals(value.getType())) {
+		else if ("integer".equals(value.getType())) {
 			if (value.getFormat().equals("int32")) {
 				return GeneratedClass.INT;
 			}
 		}
-		if ("number".equals(value.getType())) {
+		else if ("number".equals(value.getType())) {
 			if (value.getFormat().equals("float")) {
 				if (value.isRequired()) {
 					return GeneratedClass.FLOAT;

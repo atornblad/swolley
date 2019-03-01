@@ -2,7 +2,6 @@ package se.atornblad.swolley.io;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Stack;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -24,16 +23,17 @@ public class PeekableReader extends Reader {
 	@Override
 	public int read(char[] cbuf, int off, int len) throws IOException {
 		int add = 0;
+		int localOff = off;
 		
 		if (peeked != null && len >= 1) {
-			cbuf[off] = peeked;
-			off++;
+			cbuf[localOff] = peeked;
+			localOff++;
 			len--;
 			add++;
 			peeked = null;
 		}
 		
-		return add + reader.read(cbuf, off, len);
+		return add + reader.read(cbuf, localOff, len);
 	}
 	
 	public char readChar() throws IOException {

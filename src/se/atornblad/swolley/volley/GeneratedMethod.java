@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import se.atornblad.swolley.swagger.Action;
 import se.atornblad.swolley.swagger.Document;
@@ -120,6 +119,49 @@ public class GeneratedMethod {
 	 */
 	public void generateJava(StringBuilder builder, String indentation, Set<GeneratedClass> imports) {
 		
+		generateMethodJavaDoc(builder, indentation);
+		
+		builder.append(indentation);
+		generateMethodAccessModifier(builder);
+		generateMethodSignature(builder, imports);
+		
+		body.generateJava(builder, indentation, imports);
+		
+		builder.append("\n");
+	}
+
+	private void generateMethodSignature(StringBuilder builder, Set<GeneratedClass> imports) {
+		if (returnType != null) {
+			builder.append(returnType.getFullName(imports));
+			builder.append(" ");
+		}
+		builder.append(name);
+		builder.append("(");
+		Iterator<GeneratedField> i = parameters.iterator();
+		while (i.hasNext()) {
+			GeneratedField parameter = i.next();
+			parameter.generateParameterJava(builder, imports);
+			if (i.hasNext()) {
+				builder.append(", ");
+			}
+		}
+		
+		builder.append(") ");
+	}
+
+	private void generateMethodAccessModifier(StringBuilder builder) {
+		if (isPublic) {
+			builder.append("public ");
+		}
+		else {
+			builder.append("private ");
+		}
+		if (isStatic) {
+			builder.append("static ");
+		}
+	}
+
+	private void generateMethodJavaDoc(StringBuilder builder, String indentation) {
 		if (jsdocDescription != null && !jsdocDescription.equals("")) {
 			builder.append(indentation);
 			builder.append("/**\n");
@@ -151,37 +193,6 @@ public class GeneratedMethod {
 			builder.append(indentation);
 			builder.append(" */\n");
 		}
-		
-		builder.append(indentation);
-		if (isPublic) {
-			builder.append("public ");
-		}
-		else {
-			builder.append("private ");
-		}
-		if (isStatic) {
-			builder.append("static ");
-		}
-		if (returnType != null) {
-			builder.append(returnType.getFullName(imports));
-			builder.append(" ");
-		}
-		builder.append(name);
-		builder.append("(");
-		Iterator<GeneratedField> i = parameters.iterator();
-		while (i.hasNext()) {
-			GeneratedField parameter = i.next();
-			parameter.generateParameterJava(builder, imports);
-			if (i.hasNext()) {
-				builder.append(", ");
-			}
-		}
-		
-		builder.append(") ");
-		
-		body.generateJava(builder, indentation, imports);
-		
-		builder.append("\n");
 	}
 
 	public String getSignature() {

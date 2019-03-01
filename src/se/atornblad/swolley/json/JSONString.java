@@ -85,6 +85,7 @@ public class JSONString extends JSONValue {
 				else {
 					builder.append("\\u" + String.format("%04x",  (int)c));
 				}
+				break;
 			}
 		});
 		builder.append("\"");

@@ -49,7 +49,7 @@ public class GeneratedPackage {
 		return classes.values();
 	}
 	
-	void addClass(GeneratedClass newClass) {
+	public void addClass(GeneratedClass newClass) {
 		classes.put(newClass.getName(), newClass);
 	}
 	

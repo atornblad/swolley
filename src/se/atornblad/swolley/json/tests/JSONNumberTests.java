@@ -17,7 +17,7 @@ import se.atornblad.swolley.json.JSONNumber;
 
 public class JSONNumberTests {
 	
-	JSONNumber read(String value) throws IOException, InvalidJSONException {
+	public JSONNumber read(String value) throws IOException, InvalidJSONException {
 		try (StringReader reader = new StringReader(value)) {
 			try (PeekableReader peeker = new PeekableReader(reader)) {
 				return JSONNumber.readNumber(peeker);
@@ -26,18 +26,18 @@ public class JSONNumberTests {
 	}
 	
 	@Test
-	void testEmptyStringThrows() {
+	public void testEmptyStringThrows() {
 		assertThrows(InvalidJSONException.class, () -> read(""));
 	}
 
 	@ParameterizedTest
 	@MethodSource("numberValues")
-	void testReadNumberValue(String source, double expected, String message) throws IOException, InvalidJSONException {
+	public void testReadNumberValue(String source, double expected, String message) throws IOException, InvalidJSONException {
 		double value = read(source).getValue();
 		assertEquals(expected, value, 0.00000001, message);
 	}
 	
-	static Stream<Arguments> numberValues() {
+	public static Stream<Arguments> numberValues() {
 		return Stream.of(
 			Arguments.of("0", 0.0, "Zero"),
 			Arguments.of("+0", 0.0, "Positive Zero"),

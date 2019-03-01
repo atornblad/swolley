@@ -26,14 +26,14 @@ class JSONObjectTests {
 	}
 	
 	@Test
-	void testToJSONEmpty() {
+	public void testToJSONEmpty() {
 		JSONObject obj = new JSONObject();
 		String json = obj.toJSON();
 		assertEquals("{}", json);
 	}
 	
 	@Test
-	void testToJSONOneKey() {
+	public void testToJSONOneKey() {
 		JSONObject obj = new JSONObject();
 		obj.set("foo", new JSONString("bar"));
 		String json = obj.toJSON();
@@ -41,7 +41,7 @@ class JSONObjectTests {
 	}
 	
 	@Test
-	void testToJSONTwoKeys() {
+	public void testToJSONTwoKeys() {
 		JSONObject obj = new JSONObject();
 		obj.set("foo", new JSONString("bar"));
 		obj.set("num", new JSONNumber(123));
@@ -50,7 +50,7 @@ class JSONObjectTests {
 	}
 	
 	@Test
-	void testToJSONSubObject() {
+	public void testToJSONSubObject() {
 		JSONObject obj = new JSONObject();
 		JSONObject sub = new JSONObject();
 		obj.set("foo", new JSONString("bar"));
@@ -63,7 +63,7 @@ class JSONObjectTests {
 	}
 
 	@Test
-	void testReadObject() throws IOException, InvalidJSONException {
+	public void testReadObject() throws IOException, InvalidJSONException {
 		JSONObject obj = read("{\"foo\":\"bar\"}");
 		assertEquals(1, obj.getPropertyNames().size(), "Should have only one key");
 		assertEquals("bar", obj.get("foo").toString());

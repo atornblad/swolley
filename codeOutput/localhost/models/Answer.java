@@ -1,4 +1,4 @@
-// This code was auto-generated from Swagger API documentation by Swolley v0.1.16
+// This code was auto-generated from Swagger API documentation by Swolley v0.1.52
 // Please do not change this code; it might be regenerated whenever
 
 package localhost.models;
@@ -7,8 +7,8 @@ import json.org.JSONObject;
 import localhost.models.Answer;
 
 /**
- * @author swolley-v0.1.16
- * @version 20190221-163730
+ * @author swolley-v0.1.52
+ * @version 20190301-110757
  */
 public class Answer {
   

@@ -1,4 +1,4 @@
-// This code was auto-generated from Swagger API documentation by Swolley v0.1.16
+// This code was auto-generated from Swagger API documentation by Swolley v0.1.52
 // Please do not change this code; it might be regenerated whenever
 
 package localhost.clients;
@@ -17,8 +17,8 @@ import volley.android.com.VolleyError;
 /**
  * Treasures of Lindängen API
  * Detta REST-API används för att hantera quiz, frågor och svar, användarkonton, filuppladdningar med mera för Treasures of Lindängen
- * @author swolley-v0.1.16
- * @version 20190221-163730
+ * @author swolley-v0.1.52
+ * @version 20190301-110757
  */
 public class QuizControllerClient {
   

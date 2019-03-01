@@ -182,7 +182,6 @@ public final class CodeGenerator {
 		
 		GeneratedPackage clientsPackage = rootPackage.createOrGetSubPackage("clients");
 		
-		Pattern p = Pattern.compile("-[a-zA-Z]");
 		String clientClassName;
 		
 		String[] controllerTags = Arrays.stream(action.getTags())

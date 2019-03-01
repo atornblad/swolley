@@ -19,34 +19,33 @@ public class BlockStatement extends GeneratedStatement {
 	@Override
 	public void generateJava(StringBuilder builder, String indentation, Set<GeneratedClass> imports) {
 		builder.append("{\n");
-		indentation = indentation + "  ";
+		String innerIndentation = indentation + "  ";
 
 		if (allowVariablesAnywhere) {
 			for (GeneratedStatement statement : statements) {
-				builder.append(indentation);
-				statement.generateJava(builder, indentation, imports);
+				builder.append(innerIndentation);
+				statement.generateJava(builder, innerIndentation, imports);
 				builder.append("\n");
 			}
 		}
 		else {
 			for (GeneratedStatement statement : statements) {
 				if (statement instanceof GeneratedVariable) {
-					builder.append(indentation);
-					statement.generateJava(builder, indentation, imports);
+					builder.append(innerIndentation);
+					statement.generateJava(builder, innerIndentation, imports);
 					builder.append("\n");
 				}
 			}
 			
 			for (GeneratedStatement statement : statements) {
 				if (! (statement instanceof GeneratedVariable)) {
-					builder.append(indentation);
-					statement.generateJava(builder, indentation, imports);
+					builder.append(innerIndentation);
+					statement.generateJava(builder, innerIndentation, imports);
 					builder.append("\n");
 				}
 			}
 		}
 		
-		indentation = indentation.substring(0,  indentation.length() - 2);
 		builder.append(indentation);
 		builder.append("}");
 	}
