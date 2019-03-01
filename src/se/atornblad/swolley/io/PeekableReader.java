@@ -22,18 +22,18 @@ public class PeekableReader extends Reader {
 
 	@Override
 	public int read(char[] cbuf, int off, int len) throws IOException {
-		int add = 0;
+		int done = 0;
 		int localOff = off;
 		
 		if (peeked != null && len >= 1) {
 			cbuf[localOff] = peeked;
 			localOff++;
 			len--;
-			add++;
+			done++;
 			peeked = null;
 		}
 		
-		return add + reader.read(cbuf, localOff, len);
+		return done + reader.read(cbuf, localOff, len);
 	}
 	
 	public char readChar() throws IOException {

@@ -17,7 +17,7 @@ import se.atornblad.swolley.json.JSONString;
 
 class JSONObjectTests {
 
-	JSONObject read(String value) throws IOException, InvalidJSONException {
+	private JSONObject read(String value) throws IOException, InvalidJSONException {
 		try (StringReader reader = new StringReader(value)) {
 			try (PeekableReader peeker = new PeekableReader(reader)) {
 				return JSONObject.readObject(peeker);

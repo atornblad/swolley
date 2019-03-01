@@ -1,6 +1,5 @@
 package se.atornblad.swolley.swagger;
 
-import java.util.Map;
 
 public class Response {
 	private String description;

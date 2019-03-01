@@ -17,7 +17,7 @@ import se.atornblad.swolley.json.JSONNumber;
 
 public class JSONNumberTests {
 	
-	public JSONNumber read(String value) throws IOException, InvalidJSONException {
+	private JSONNumber read(String value) throws IOException, InvalidJSONException {
 		try (StringReader reader = new StringReader(value)) {
 			try (PeekableReader peeker = new PeekableReader(reader)) {
 				return JSONNumber.readNumber(peeker);

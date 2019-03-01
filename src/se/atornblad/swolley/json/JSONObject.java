@@ -95,11 +95,10 @@ public class JSONObject extends JSONValue {
 		if (properties.size() == 0) return "{}";
 		StringBuilder builder = new StringBuilder();
 		builder.append("{\n");
-		indentation++;
 		Iterator<String> keyIter = orderedPropertyNames.iterator();
 		while (keyIter.hasNext()) {
 			String key = keyIter.next();
-			builder.append(String.format("%" + (indentation * 2) + "s", ""));
+			builder.append(String.format("%" + ((indentation + 1) * 2) + "s", ""));
 			builder.append((new JSONString(key)).toJSON());
 			builder.append(" : ");
 			builder.append(properties.get(key).toJSON(indentation));
@@ -107,7 +106,6 @@ public class JSONObject extends JSONValue {
 				builder.append(",\n");
 			}
 		}
-		indentation--;
 		builder.append("\n");
 		if (indentation > 0) builder.append(String.format("%" + (indentation * 2) + "s", ""));
 		builder.append("}");
@@ -133,7 +131,6 @@ public class JSONObject extends JSONValue {
 		return remainingKeys.isEmpty();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public <T> T create(Class<T> theClass) throws InvalidClassException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException {
 		T obj = theClass.newInstance();
 		
