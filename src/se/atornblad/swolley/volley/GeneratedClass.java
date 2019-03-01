@@ -390,11 +390,9 @@ public class GeneratedClass implements Comparable<GeneratedClass> {
 		}
 		else if (value.getType() == null) {
 			String ref = value.get$ref();
-			if (ref != null) {
-				if (ref.startsWith("#/definitions/")) {
-					GeneratedPackage modelsPackage = rootPackage.createOrGetSubPackage("models");
-					return modelsPackage.createOrGetClass(ref.substring(14));
-				}
+			if (ref != null && ref.startsWith("#/definitions/")) {
+				GeneratedPackage modelsPackage = rootPackage.createOrGetSubPackage("models");
+				return modelsPackage.createOrGetClass(ref.substring(14));
 			}
 		}
 		else if ("object".equals(value.getType())) {
@@ -428,7 +426,16 @@ public class GeneratedClass implements Comparable<GeneratedClass> {
 					return GeneratedClass.Float;
 				}
 			}
+			else if (value.getFormat().equals("double")) {
+				if (value.isRequired()) {
+					return GeneratedClass.DOUBLE;
+				}
+				else {
+					return GeneratedClass.Double;
+				}
+			}
 		}
+		
 		System.out.println("Cannot yet create GeneratedClass from Schema where type = " + value.getType());
 		throw new NotImplementedException();
 	}
@@ -454,22 +461,25 @@ public class GeneratedClass implements Comparable<GeneratedClass> {
 	}
 
 	public GeneratedClass addGenericTypeArgument(GeneratedClass type) {
-		if (type == null) {
-			type = GeneratedClass.VOID;
+		GeneratedClass innerType = type;
+		
+		if (innerType == null) {
+			innerType = GeneratedClass.VOID;
 		}
-		else if (type.equals(INT)) {
-			type = Integer;
+		else if (innerType.equals(INT)) {
+			innerType = Integer;
 		}
-		else if (type.equals(BOOLEAN)) {
-			type = Boolean;
+		else if (innerType.equals(BOOLEAN)) {
+			innerType = Boolean;
 		}
-		else if (type.equals(FLOAT)) {
-			type = Float;
+		else if (innerType.equals(FLOAT)) {
+			innerType = Float;
 		}
-		else if (type.equals(DOUBLE)) {
-			type = Double;
+		else if (innerType.equals(DOUBLE)) {
+			innerType = Double;
 		}
-		this.genericTypeArguments.add(type);
+		
+		this.genericTypeArguments.add(innerType);
 		return this;
 	}
 }

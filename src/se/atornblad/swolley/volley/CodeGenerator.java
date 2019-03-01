@@ -12,7 +12,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import se.atornblad.swolley.strings.StringReplacer;
-import se.atornblad.swolley.swagger.*;
+import se.atornblad.swolley.swagger.Action;
+import se.atornblad.swolley.swagger.Definition;
+import se.atornblad.swolley.swagger.Document;
+import se.atornblad.swolley.swagger.Path;
+import se.atornblad.swolley.swagger.Schema;
 
 public final class CodeGenerator {
 
@@ -33,7 +37,7 @@ public final class CodeGenerator {
 		for (Entry<String, Definition> entry : doc.getDefinitions().entrySet()) {
 			String className = entry.getKey();
 			Definition definition = entry.getValue();
-			createDefinitionClass(doc, rootPackage, className, definition);
+			createDefinitionClass(rootPackage, className, definition);
 		}
 		
 		generateJavaFiles(rootPackage, srcPath + "/" + rootPackage.getLocalDir());
@@ -61,7 +65,7 @@ public final class CodeGenerator {
 		}
 	}
 
-	private static void createDefinitionClass(Document doc, GeneratedPackage rootPackage, String className, Definition definition) {
+	private static void createDefinitionClass(GeneratedPackage rootPackage, String className, Definition definition) {
 		GeneratedPackage modelsPackage = rootPackage.createOrGetSubPackage("models");
 		
 		GeneratedClass defClass = modelsPackage.createOrGetClass(className);

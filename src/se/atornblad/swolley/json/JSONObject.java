@@ -101,7 +101,7 @@ public class JSONObject extends JSONValue {
 			builder.append(String.format("%" + ((indentation + 1) * 2) + "s", ""));
 			builder.append((new JSONString(key)).toJSON());
 			builder.append(" : ");
-			builder.append(properties.get(key).toJSON(indentation));
+			builder.append(properties.get(key).toJSON(indentation + 1));
 			if (keyIter.hasNext()) {
 				builder.append(",\n");
 			}
@@ -177,10 +177,8 @@ public class JSONObject extends JSONValue {
 			ClassNotFoundException {
 		Class<?> cls = (Class<?>)type;
 		
-		if (cls.isAssignableFrom(String.class)) {
-			if (jsonValue instanceof JSONString) {
-				return ((JSONString)jsonValue).getValue();
-			}
+		if (cls.isAssignableFrom(String.class) && jsonValue instanceof JSONString) {
+			return ((JSONString)jsonValue).getValue();
 		}
 		
 		if (jsonValue instanceof JSONObject) {

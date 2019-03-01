@@ -61,19 +61,18 @@ public class JSONArray extends JSONValue {
 	public String toJSON(int indentation) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("[\n");
-		indentation++;
 		Iterator<JSONValue> iter = items.iterator();
 		
 		while (iter.hasNext()) {
 			JSONValue value = iter.next();
-			builder.append(String.format("%" + (indentation * 2) + "s", ""));
-			builder.append(value.toJSON(indentation));
+			builder.append(String.format("%" + ((indentation + 1) * 2) + "s", ""));
+			builder.append(value.toJSON(indentation + 1));
 			if (iter.hasNext()) {
 				builder.append(",\n");
 			}
 		}
-		indentation--;
 		builder.append("\n");
+		
 		if (indentation >= 1) builder.append(String.format("%" + (indentation * 2) + "s", ""));
 		builder.append("]");
 		

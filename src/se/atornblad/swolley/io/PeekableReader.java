@@ -24,16 +24,17 @@ public class PeekableReader extends Reader {
 	public int read(char[] cbuf, int off, int len) throws IOException {
 		int done = 0;
 		int localOff = off;
+		int localLen = len;
 		
 		if (peeked != null && len >= 1) {
 			cbuf[localOff] = peeked;
 			localOff++;
-			len--;
+			localLen--;
 			done++;
 			peeked = null;
 		}
 		
-		return done + reader.read(cbuf, localOff, len);
+		return done + reader.read(cbuf, localOff, localLen);
 	}
 	
 	public char readChar() throws IOException {
